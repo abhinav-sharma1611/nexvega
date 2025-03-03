@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model City {
+  id       String     @id @default(uuid())
+  name     String     @unique
+  distance Int
+  Cop      Cop[]
+  Fugitive Fugitive[]
+}
+
+model Vehicle {
+  id    String @id @default(uuid())
+  type  String
+  range Int
+  count Int
+  Cop   Cop[]
+}
+
+model Cop {
+  id        String  @id @default(uuid())
+  name      String
+  cityId    String
+  vehicleId String
+  city      City    @relation(fields: [cityId], references: [id])
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id])
+}
+
+model Fugitive {
+  id     String @id @default(uuid())
+  cityId String
+  city   City   @relation(fields: [cityId], references: [id])
+}
